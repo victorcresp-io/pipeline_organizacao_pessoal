@@ -27,11 +27,23 @@ def transforme_to_dataframe_pandas(worksheet):
     df = pd.DataFrame(worksheet.get_all_records())
     return df
 
+def transforme_dataframe_columns(df):
+    df.columns = [
+    "despesas",
+    "valor",
+    "dia",
+    "responsavel",
+    "motivo_despesa",
+    "itens"
+    ]
+    return df
+
 def testing():
     cred = get_cred()
     sheet = open_sheet(cred)
     worksheet = select_worksheet(sheet)
     df = transforme_to_dataframe_pandas(worksheet)
+    df_tratado = transforme_dataframe_columns(df)
     return df
 
 if __name__ == '__main__':
