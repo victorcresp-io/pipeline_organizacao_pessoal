@@ -3,16 +3,18 @@ import os
 import pandas as pd
 import gspread
 from dotenv import load_dotenv
+from google.cloud import bigquery
+from google.oauth2 import service_account
 
 load_dotenv()
 
-serv_account = os.getenv('SERV_ACCOUNT')
+project_id = os.getenv('PROJECT_ID')
 sheet_name = os.getenv('SHEET_NAME')
 target_worksheet = os.getenv('TARGET_WORKSHEET')
 
 
-def get_cred():
-    cred = gspread.service_account(filename=serv_account)
+def get_cred(serv_account_google_sh):
+    cred = gspread.service_account(filename=serv_account_google_sh)
     return cred
 
 def open_sheet(cred):
@@ -46,6 +48,17 @@ def testing():
     df_tratado = transforme_dataframe_columns(df)
     return df
 
+def cred_bigquery(serv_account_bigquery):
+    cred = service_account.Credentials.from_service_account_file(serv_account_bigquery)
+    return cred
+
+
+
 if __name__ == '__main__':
-    df = testing()
-    print(df.info())
+    client_bq = auth_bigquery()
+    query = "SELECT CURRENT_DATE() AS today"
+
+    result = client_bq.query(query).result()
+
+    for row in result:
+        print(row.today)
