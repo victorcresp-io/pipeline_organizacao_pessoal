@@ -37,3 +37,14 @@ def load_df_to_bigquery(client, table_id, df):
     job.result()
     print('Upload sucessful!')
 
+def no_duplicates(df):
+    df_clean = df.drop_duplicates(
+        subset=[
+            "data_despesa",
+            "tipo_despesa",
+            "explicacao_despesa",
+            "item_despesa",
+            "valor_total_despesa"
+        ]
+    )
+    return df_clean
